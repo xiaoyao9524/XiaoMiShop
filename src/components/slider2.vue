@@ -1,44 +1,37 @@
 <template>
-    <div class="slider">
-      <h1>小米商城</h1>
-      <ul class="nav">
-        <li
-          v-for="(item, index) in list"
-          :class="{active: index === inNum}"
-          @click="tabPage(index)"
-        >{{item.title}}
-        </li>
-      </ul>
-      <div class="page-wrap">
-        <transition
-          class="page-wrap"
-          v-for="(item, index) in list"
-          :key="index"
-          :name="inNum === index ? outNum > index ? 'left-in' : 'right-in' : outNum === index ? outNum > inNum ? 'right-out' : 'left-out' : ''"
+  <div class="slider">
+    <h1>小米商城</h1>
+    <ul class="nav">
+      <li
+        v-for="(item, index) in list"
+        :class="{active: index === inNum}"
+        @click="tabPage(index)"
+        :key="index"
+      >
+      {{item.title}}
+      </li>
+    </ul>
+
+    <div class="page-wrap">
+      <transition
+        class="page-wrap"
+        v-for="(item, index) in list"
+        :key="index"
+        :name="inNum === index ? outNum > index ? 'left-in' : 'right-in' : outNum === index ? outNum > inNum ? 'right-out' : 'left-out' : ''"
+      >
+        <bodys 
+          class="bodys"
+          v-show="index === inNum"
+          :list="item"
         >
-          <!--
-            将要进入的是这个元素吗？
-              是的话：将要出去的元素比他大吗？
-                大的话：从左边进('left-in')
-                小的话：从右边进('right-in')
-              不是的话：要出去的是这个元素吗？
-                是的话：要出去的元素（就是这个元素）比进入的元素大吗？
-                  大的话： 从右边出去('right-out')
-                  小的话： 从左边出去('left-out')
-            如果出去进来都不是这个元素
-              什么都不做 ('')
-          -->
-          <div
-            class="bodys"
-            v-show="index === inNum"
-          >{{item.title}}
-          </div>
-        </transition>
-      </div>
+        </bodys>
+      </transition>
     </div>
+  </div>
 </template>
 
 <script>
+  import bodys from './bodys'
     export default {
       name: "slider",
       data () {
@@ -70,17 +63,18 @@
             outNum: 0
           }
       },
-      computed: {
+      components: {
+        bodys
       },
       methods: {
         tabPage (index) {
-          // this.outNum = this.inNum;
-          // this.inNum = index;
-          let _this = this;
-          setTimeout(function () {
-            _this.outNum = _this.inNum;
-            _this.inNum = index;
-          }, 1000) // 模拟延迟
+          this.outNum = this.inNum;
+          this.inNum = index;
+          // let _this = this;
+          // setTimeout(function () {
+          //   _this.outNum = _this.inNum;
+          //   _this.inNum = index;
+          // }, 1000) // 模拟延迟
         }
       }
     }
@@ -117,16 +111,6 @@
   .page-wrap::-webkit-scrollbar {
     height: 0;
   }
-  .bodys {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 414px;
-    height: 400px;
-    border: 1px solid #000;
-    box-sizing: border-box;
-    background: paleturquoise;
-  }
   /* demo start */
   .left-in-enter-active,
   .left-in-leave-active,
@@ -139,27 +123,27 @@
     transition: .3s;
   }
   .left-in-enter, .left-in-leave-to {/*左侧进入 start*/
-    left: -400px;
+    transform: translate(-400px, 0);
   }
   .left-in-enter-to, .left-in-leave {/*左侧进入 end*/
-    left: 0;
+    transform: translate(0, 0);
   }
   .left-out-leave, .left-out-enter-to {/*左侧出去 start*/
-    left: 0;
+    transform: translate(0, 0);
   }
   .left-out-leave-to, .left-out-enter {/*左侧出去 end*/
-    left: -400px;
+    transform: translate(-400px, 0);
   }
   .right-in-enter, .right-in-leave-to {
-    left: 400px;
+    transform: translate(400px, 0);
   }
   .right-in-enter-to, .right-in-leave {
-    left: 0;
+    transform: translate(0, 0);
   }
   .right-out-enter, .right-out-leave-to {
-    left: 400px;
+    transform: translate(400px, 0);
   }
   .right-out-enter-to, .right-out-leave {
-    left: 0;
+    transform: translate(0, 0);
   }
 </style>
